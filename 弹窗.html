@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>粉色祝福弹窗</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0f0f1a;
+        }
+
+        .card-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .blessing-card {
+            position: absolute;
+            width: 280px;
+            padding: 20px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: floatUp 0.8s forwards, fadeOut 2s 2s forwards;
+            backdrop-filter: blur(8px);
+        }
+
+        @keyframes floatUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container" id="cardContainer"></div>
+
+    <script>
+        const blessings = [
+            "天天开心！", "你很好！", "保持微笑！", "一切都会好起来的！", 
+            "世界因你而温柔！", "愿你被岁月温柔以待！", "心之所向，素履以往！",
+            "所求皆如愿，所行化坦途！", "平安喜乐，万事顺遂！", 
+            "愿你眼里有光，心中有爱！", "生活明朗，万物可爱！", 
+            "不必完美，做自己就好！", "你值得所有美好！", 
+            "愿你三冬暖，春不寒！", "心怀感恩，所遇皆温柔！", 
+            "愿你活成自己喜欢的样子！", "未来可期，不负韶华！", 
+            "愿你此生尽兴，赤诚善良！", "愿你自由如风，勇敢追梦！",
+            "愿你所爱之人，皆得幸福！", "愿你被爱包围，无惧无畏！",
+            "愿你眼中有星辰，心中有山海！", "愿你走出半生，归来仍是少年！",
+            "愿你所遇皆良善，所行化坦途！", "愿你心之所向，行之所往！",
+            "愿你遍历山河，仍觉人间值得！", "愿你所求皆所愿，所行化坦途！"
+        ];
+
+        function createBlessingCard() {
+            const card = document.createElement('div');
+            card.className = 'blessing-card';
+            
+            // 随机位置
+            const xPos = Math.random() * (window.innerWidth - 280);
+            const yPos = Math.random() * (window.innerHeight - 120);
+            card.style.left = `${xPos}px`;
+            card.style.top = `${yPos}px`;
+
+            // 随机祝福语
+            const randomIndex = Math.floor(Math.random() * blessings.length);
+            card.textContent = blessings[randomIndex];
+
+            // 随机阴影效果
+            const shadowOffset = 8 + Math.random()*12;
+            const shadowBlur = 15 + Math.random()*10;
+            card.style.boxShadow = `0 ${shadowOffset}px ${shadowBlur}px rgba(255, 107, 107, 0.4)`;
+
+            // 随机动画速度
+            const duration = 0.8 + Math.random()*0.4;
+            card.style.animationDuration = `${duration}s`;
+            card.style.animationDelay = `${Math.random()*0.5}s`;
+
+            cardContainer.appendChild(card);
+
+            // 自动销毁
+            setTimeout(() => {
+                card.remove();
+            }, 2000 + 1000*duration);
+        }
+
+        // 每2秒生成新卡片
+        setInterval(createBlessingCard, 2000);
+    </script>
+</body>
+</html>
