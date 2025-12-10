@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>浪漫粉色弹窗</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Arial Rounded MT Bold", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #fff;
+            position: relative;
+        }
+        /* 左上角文字 */
+        .author {
+            position: fixed;
+            top: 8px;
+            left: 8px;
+            font-size: 11px;
+            color: #ff88b8;
+            opacity: 0.7;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        /* 爱心背景容器 */
+        .love-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        /* 爱心样式 */
+        .love {
+            position: absolute;
+            color: #ffc0cb;
+            opacity: 0.6;
+            animation: floatLove 8s linear infinite;
+            pointer-events: none;
+        }
+        /* 爱心浮动动画 */
+        @keyframes floatLove {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-20px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        /* 弹窗容器 */
+        .popup-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+        /* 弹窗样式 */
+        .popup {
+            position: absolute;
+            background: linear-gradient(135deg, #ffeff5 0%, #ffd1dc 100%);
+            border: 1px solid #ffb6c1;
+            border-radius: 12px;
+            padding: 12px 16px;
+            min-width: 180px;
+            max-width: 240px;
+            box-shadow: 0 4px 12px rgba(255, 136, 184, 0.25);
+            opacity: 0;
+            pointer-events: auto;
+            animation: popupShow 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       popupHide 0.5s cubic-bezier(0.64, 0.04, 0.35, 1) 0.5s forwards;
+        }
+        /* 弹窗弹出动画 */
+        @keyframes popupShow {
+            0% {
+                transform: translateY(-20px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        /* 弹窗消失动画 */
+        @keyframes popupHide {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(10px) scale(0.95);
+                opacity: 0;
+            }
+        }
+        /* 弹窗文字 */
+        .popup-text {
+            font-size: 14px;
+            color: #d63384;
+            line-height: 1.4;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 左上角作者名 -->
+    <div class="author">染儿创作</div>
+
+    <!-- 爱心背景容器 -->
+    <div class="love-bg" id="loveBg"></div>
+
+    <!-- 弹窗容器 -->
+    <div class="popup-container" id="popupContainer"></div>
+
+    <script>
+        // 浪漫短语库（增加随机性，降低AI感）
+        const loveTexts = [
+            "爱欣欣",
+            "永远在一起～",
+            "别熬夜注意身体",
+            "我想你了",
+            "早点休息，多吃点饭",
+            "不要不理我",
+            "永远都在你身边",
+            "你很好，不要在意别人眼光",
+            "心里只有你",
+            "不要离开我",
+            "爱老婆",
+            "你只能是我的",
+            "爱你一生一世",
+            "5211314",
+            "满心都是你"
+        ];
+
+        // 创建爱心背景
+        function createLoveHearts() {
+            const loveBg = document.getElementById('loveBg');
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // 初始创建20个爱心，持续循环添加
+            setInterval(() => {
+                const love = document.createElement('div');
+                love.className = 'love';
+                // 随机爱心大小（12-24px）
+                const size = Math.floor(Math.random() * 13) + 12;
+                love.style.fontSize = `${size}px`;
+                love.innerHTML = '❤';
+                // 随机位置
+                love.style.left = `${Math.floor(Math.random() * (screenWidth - size))}px`;
+                // 随机动画延迟（0-5s）
+                love.style.animationDelay = `${Math.random() * 5}s`;
+                // 随机动画时长（6-12s）
+                love.style.animationDuration = `${Math.floor(Math.random() * 6) + 6}s`;
+                loveBg.appendChild(love);
+
+                // 爱心出屏后移除，避免DOM堆积
+                setTimeout(() => {
+                    love.remove();
+                }, 12000);
+            }, 300);
+        }
+
+        // 创建单个弹窗
+        function createPopup() {
+            const popupContainer = document.getElementById('popupContainer');
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+
+            // 随机选取浪漫短语
+            const randomText = loveTexts[Math.floor(Math.random() * loveTexts.length)];
+            popup.innerHTML = `<div class="popup-text">${randomText}</div>`;
+
+            // 随机位置（避免超出屏幕，不遮挡）
+            const popupWidth = popup.offsetWidth || 200; // 预估宽度
+            const popupHeight = popup.offsetHeight || 60; // 预估高度
+            const maxLeft = screenWidth - popupWidth - 20; // 左右留20px边距
+            const maxTop = screenHeight - popupHeight - 20; // 上下留20px边距
+            const left = Math.floor(Math.random() * maxLeft) + 10;
+            const top = Math.floor(Math.random() * maxTop) + 10;
+
+            popup.style.left = `${left}px`;
+            popup.style.top = `${top}px`;
+            popupContainer.appendChild(popup);
+
+            // 弹窗动画结束后移除（1秒后）
+            setTimeout(() => {
+                popup.remove();
+            }, 1000);
+        }
+
+        // 每隔1秒生成5个弹窗
+        function generatePopupsLoop() {
+            setInterval(() => {
+                // 一次生成5个，逐个延迟出现，更丝滑
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createPopup();
+                    }, i * 100); // 每个间隔100ms，避免同时扎堆
+                }
+            }, 1000);
+        }
+
+        // 页面加载后执行
+        window.onload = function() {
+            createLoveHearts();
+            generatePopupsLoop();
+        };
+    </script>
+</body>
+</html>
